@@ -1,0 +1,12 @@
+.Login{
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 34px;
+    align-self: center;
+    justify-content: center;
+    width: 400px;
+}
+
+.Login button{
+    
+}

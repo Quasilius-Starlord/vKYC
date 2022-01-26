@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {FormLabel, Button, Form } from 'react-bootstrap';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace } from './/additional/validator';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import factory from '../ethereum/factory';
-import Kyc from '../ethereum/kyc';
-import web3 from '../ethereum/web3';
+import { isEmail, isEmpty, isLength, isContainWhiteSpace } from '..//additional/validator';
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import factory from '../../ethereum/factory';
+import Kyc from '../../ethereum/kyc';
+import web3 from '../../ethereum/web3';
+import './Login.css';
+import { Link ,useNavigate } from "react-router-dom";
 
 function KYCIndex(props){
     const [ account, setAccount ] = useState('');
@@ -67,7 +69,7 @@ function KYCIndex(props){
     	);
 }
 
-export default KYCIndex;
+export default Home;
 
 // /*class KYCIndex extends React.Component {
 

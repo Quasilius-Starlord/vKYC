@@ -94,11 +94,20 @@ contract Userdef{
         return usersAddress;
     }
 
-    function getparticularUser() public view userRestricted
-    returns(string memory, string memory, string memory, string memory, string memory, uint,string memory,uint,string memory){
-        require(users[msg.sender].set);
-        return (users[msg.sender].name,users[msg.sender].father,users[msg.sender].mother,users[msg.sender].birthdate,users[msg.sender].add,users[msg.sender].mob,users[msg.sender].email,users[msg.sender].aadhar,users[msg.sender].pan);
+    function getparticularUser(address rer) public view
+    returns(string memory, string memory, string memory, string memory, string memory, uint,string memory){
+        require(users[rer].set);
+        require(rer == manager);
+        return (users[rer].name,users[rer].father,users[rer].mother,users[rer].birthdate,users[rer].add,users[rer].mob,users[rer].email);
     }
+
+    function getAadharPan(address rer) public view
+    returns(uint,string memory){
+        require(users[rer].set);
+        require(rer == manager);
+        return (users[rer].aadhar,users[rer].pan);
+    }
+
 
     function getUserDetails() public view agentRestricted
     returns(string memory, string memory, string memory, string memory, string memory, uint,string memory,uint,string memory){
@@ -120,7 +129,8 @@ contract Userdef{
         });
     }
 
-    function approveRequest() public userRestricted{
+    function approveRequest(address rer) public{
+        require(rer == manager);
         require(!requests.complete);
         assigned = requests.recepient;
         requests.complete = true;
