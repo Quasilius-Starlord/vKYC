@@ -47,6 +47,7 @@ export default function KYCForm(props){
 
     let submitHandler=async e => {
         e.preventDefault();
+        let accounts = account;
         const contract=Kyc(kycContractAddress);
         const methords=await contract.methods;
         console.log(methords)
@@ -55,8 +56,8 @@ export default function KYCForm(props){
         if(aadharFile!==null && PANFile!==null){
             try{
                 console.log(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number')
-                // const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number').call();
-                // console.log('user data has been added',res);
+                const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number').send({from: accounts});
+                console.log('user data has been added',res);
             }catch(err){
                 console.log(err);
                 console.log('some error has occored while adding data of user');
