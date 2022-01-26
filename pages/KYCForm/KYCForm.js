@@ -1,12 +1,9 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {FormLabel, Button, Form } from 'react-bootstrap';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import factory from './../../ethereum/factory';
-import Kyc from './../../ethereum/kyc';
-import web3 from './../../ethereum/web3';
-import { useRouter } from "next/router";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+import axios from 'axios';
 
 export default function KYCForm(props){
     const [ aadharFile, setAadharFile ] = useState(null);
@@ -17,50 +14,19 @@ export default function KYCForm(props){
     const [ address, setAddress ] = useState('');
     const [ number, setNumber ] = useState('');
     const [ DOB, setDOB ] = useState('');
-    const [ account, setAccount ] = useState('');
-    const [ kycContractAddress, setKycContractAddress ] = useState('')
-    
-    useEffect(async()=>{
-        console.log('props',props)
-        let accounts = await web3.eth.getAccounts();
-        let account=null;
-        if(accounts===[]){
-            console.log('no account found')
-            return;
-        }else{
-            account=accounts[0];
-            setAccount(accounts[0])
-        }
-        try{
-            console.log('done')
-            let kycaddress=await factory.methods.login(account).call();
-            if(kycaddress!==""){
-                setKycContractAddress(kycaddress);
-            }else{
-                return;
-            }
-        }catch(e){
-            console.log('login not found please login first')
-            console.log(e);
-        }
-    },[])
-
     let submitHandler=async e => {
         e.preventDefault();
-        const contract=Kyc(kycContractAddress);
-        const methords=await contract.methods;
-        console.log(methords)
-        console.log(DOB,typeof(DOB))
-        // return;
         if(aadharFile!==null && PANFile!==null){
-            try{
-                console.log(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number')
-                // const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number').call();
-                // console.log('user data has been added',res);
-            }catch(err){
-                console.log(err);
-                console.log('some error has occored while adding data of user');
-            }
+            await props.uploadForKYC();
+            // console.log(aadharFile.name, PANFile.name);
+            // const formData=new FormData();
+            // formData.append('aadhar', aadharFile, aadharFile.name);
+            // formData.append('pan', PANFile, PANFile.name);
+            // axios.post('http://localhost:8000/uploadDocs/',formData,{
+            //     headers:{
+            //         'Content-Type':'multipart/form-data'
+            //     }
+            // }).then(e => console.log(e))
         }
     }
 
@@ -70,7 +36,7 @@ export default function KYCForm(props){
     // address
     // dob
     return(
-        <div style={{width:'50%', margin:'auto'}}>
+        <div style={{width:'50%'}}>
             <Form onSubmit={e => submitHandler(e) }>
                 <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>

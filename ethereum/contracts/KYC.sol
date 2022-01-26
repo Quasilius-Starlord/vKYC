@@ -10,7 +10,6 @@ contract KycFactory{
     Userdef[] public deployedKycs;
     mapping(address => Register) particularUserKyc;
 
-
     function createKyc() public{
         Userdef newKyc = new Userdef(msg.sender);
         particularUserKyc[msg.sender].kycContract = newKyc;

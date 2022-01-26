@@ -1,58 +1,60 @@
 import React, { useState, useEffect } from "react";
 import {FormLabel, Button, Form } from 'react-bootstrap';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace } from '..//additional/validator';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import factory from '../../ethereum/factory';
-import Kyc from '../../ethereum/kyc';
-import web3 from '../../ethereum/web3';
-import './Login.css';
-import { Link ,useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import factory from './../../ethereum/factory';
+import Kyc from './../../ethereum/kyc';
+import web3 from './../../ethereum/web3';
+import { useRouter } from "next/router";
 
-function KYCIndex(props){
+function Home(props){
     const [ account, setAccount ] = useState('');
     //const [ kyc, setKyc ] = useState('');
+    const router=useRouter();
 
     useEffect(async()=>{
+        console.log('props',props)
         let accounts = await web3.eth.getAccounts();
-        //let kyc = await factory.methods.login(accounts[0]).call();
-
-        if(accounts === []){
-            console.log('no account found');
+        if(accounts===[]){
+            console.log('no account found')
             return;
         }else{
-            accounts=accounts[0];
+            setAccount(accounts[0])
         }
-        setAccount(accounts);
-        //setKyc(kyc);
+        
     },[])
+    console.log('accounts',account);
 
 
     const createKycSubmit = async(e)=>{
         console.log('creating KYC');
         let accounts = account
         try{
-        	let kyc = await factory.methods.login(accounts).call();
+        	let kyc = await factory.methods;
         	console.log("You are already registered");
         } catch(e){
         	await factory.methods.createKyc().send({
         		from: accounts
         	});
-        	console.log("creating kyc");
+        	console.log("kyc created proced with login");
         }
         // I need to check here once whether the user has already created kyc or not. for now i am just redirecting
 
-        //let accounts = await web3.eth.getAccounts();
+        // let accounts = await web3.eth.getAccounts();
     };
 
     const loginToKyc= async(e) => {
         console.log('applying for kyc');
         let accounts = account;
-		let kyc = await factory.methods.login(accounts).call();
-		const con = Kyc(kyc);
-		const user = await con.methods.manager().call();
-
-		console.log(kyc);
-		console.log(user);
+        try{
+            let loginState=await factory.methods.login(account).call();
+            console.log(loginState)
+            if(loginState!==null){
+                router.push('/FormRegister/Register')
+                return;
+            }
+        }catch(e){
+            console.log('user not registered for kyc creation');
+        }
     };
 
     return(
@@ -67,6 +69,24 @@ function KYCIndex(props){
             </div>
         </div>
     	);
+}
+
+export async function getServerSideProps(context){
+    let accounts = await web3.eth.getAccounts();
+    // console.log(accounts)
+    if(accounts === []){
+        return{
+            props:{
+                accounts:[]
+            }
+        }
+    }else{
+        return{
+            props:{
+                acc:accounts
+            }
+        }
+    }
 }
 
 export default Home;
