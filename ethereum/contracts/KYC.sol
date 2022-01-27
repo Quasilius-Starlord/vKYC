@@ -8,6 +8,7 @@ contract KycFactory{
         bool kycdone;
     }
     Userdef[] public deployedKycs;
+    mapping(Userdef => bool) agentdeployedKycs;
     mapping(address => Register) particularUserKyc;
 
     function createKyc() public{
@@ -15,6 +16,7 @@ contract KycFactory{
         particularUserKyc[msg.sender].kycContract = newKyc;
         particularUserKyc[msg.sender].isRegistered = true;
         particularUserKyc[msg.sender].kycdone = false;
+        agentdeployedKycs[newKyc] = false;
         deployedKycs.push(newKyc);
     }
 
@@ -27,13 +29,23 @@ contract KycFactory{
         return deployedKycs;
     }
 
+
+    function getRandomUser() public view returns(Userdef) {
+        Userdef[] storage falsedeployed;
+        for(uint i=0; i<deployedKycs.length; i++){
+            if(!agentdeployedKycs[deployedKycs[i]]){
+                falsedeployed.push(deployedKycs[i]);
+            }
+        }
+        uint index = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, falsedeployed)))%falsedeployed.length;
+        return falsedeployed[index];
+    }
+
     function getparticularUser() public view returns(Userdef){
         return particularUserKyc[msg.sender].kycContract;
     }
 
 }
-
-// "a","f","m",454,"asd",9369,"axas",2489,"ad"
 
 contract Userdef{
 
@@ -43,16 +55,14 @@ contract Userdef{
         string mother;
         string birthdate;
         string add;
-        uint mob;
+        string mob;
         string email;
-        uint aadhar;
+        string aadhar;
         string pan;
         bool set;
         string aadharipfsHash;
         string panipfsHash;
     }
-
-    
 
     address public usersAddress;
     mapping(address => User) users;
@@ -73,7 +83,7 @@ contract Userdef{
         manager = creator;           // User will be owner as it is his/her contract.
     }
 
-    function addUser(string memory n, string memory f, string memory m, string memory d, string memory ad, uint mo,string memory e,uint aadhar,string memory pan,string memory ah,string memory ph) 
+    function addUser(string memory n, string memory f, string memory m, string memory d, string memory ad,string memory mo,string memory e,string memory aadhar,string memory pan,string memory ah,string memory ph) 
     public userRestricted{
         address entry = msg.sender;
         require(!users[entry].set);
@@ -92,21 +102,20 @@ contract Userdef{
         users[entry].set = true;
     }
 
-
     function getDeployedUsers() public view returns(address) {
         return usersAddress;
     }
 
     //use this joy
     function getparticularUser(address rer) public view
-    returns(string memory, string memory, string memory, string memory, string memory, uint,string memory){
+    returns(string memory, string memory, string memory, string memory, string memory, string memory,string memory){
         require(users[rer].set);
         require(rer == manager);
         return (users[rer].name,users[rer].father,users[rer].mother,users[rer].birthdate,users[rer].add,users[rer].mob,users[rer].email);
     }
 
     function getAadharPan(address rer) public view
-    returns(uint,string memory){
+    returns(string memory,string memory){
         require(users[rer].set);
         require(rer == manager);
         return (users[rer].aadhar,users[rer].pan);
@@ -118,21 +127,24 @@ contract Userdef{
         return (users[rer].aadharipfsHash,users[rer].panipfsHash);
     }
 
-    function getUserDetails() public view agentRestricted
-    returns(string memory, string memory, string memory, string memory, string memory, uint,string memory,uint,string memory){
+    function getUserDetails(address ass) public view agentRestricted
+    returns(string memory, string memory, string memory, string memory, string memory, string memory,string memory,string memory,string memory){
+        require(assigned == ass);
         return (users[manager].name,users[manager].father,users[manager].mother,users[manager].birthdate,users[manager].add,users[manager].mob,users[manager].email,users[manager].aadhar,users[manager].pan);
     }
 
     struct Request{
         string description;
+        string link;
         address recepient;
         bool complete;
     }
     Request requests;
 
-    function createRequest(string memory describe) public{
+    function createRequest(string memory describe,string memory link) public{
         requests = Request({                    // Agent will create a request for accessing documents of user/manager.
             description: describe,
+            link: link,
             recepient: msg.sender,               // Recepient address will be of agent's i.e., assigned
             complete: false
         });
