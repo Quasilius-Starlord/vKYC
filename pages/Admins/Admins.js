@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {FormLabel, Button, Form } from 'react-bootstrap';
+import {FormLabel, Button, Form, Card, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import factory from './../../ethereum/factory';
 import Kyc from './../../ethereum/kyc';
@@ -19,7 +19,7 @@ export default function Admins(props){
             return;
         }else{
             try{
-                let kyc=await factory.methods.getDeployedKycs().call();
+                let kyc=await factory.methods.getRandomUser().call();
                 console.log(kyc)
             }catch(err){
                 console.log('no user found')
@@ -29,5 +29,18 @@ export default function Admins(props){
         }
     },[]);
 
-    return null;
+    return (
+        <Container>
+            <Card>
+                <Card.Header as="h5">Featured</Card.Header>
+                <Card.Body>
+                    <Card.Title>Name of user</Card.Title>
+                    <Card.Text>
+                        details of user
+                    </Card.Text>
+                    <Button variant="info">Send Request</Button>
+                </Card.Body>
+            </Card>
+        </Container>
+    );
 }
