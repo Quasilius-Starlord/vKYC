@@ -48,6 +48,8 @@ contract Userdef{
         uint aadhar;
         string pan;
         bool set;
+        string aadharipfsHash;
+        string panipfsHash;
     }
 
     
@@ -71,7 +73,7 @@ contract Userdef{
         manager = creator;           // User will be owner as it is his/her contract.
     }
 
-    function addUser(string memory n, string memory f, string memory m, string memory d, string memory ad, uint mo,string memory e,uint aadhar,string memory pan) 
+    function addUser(string memory n, string memory f, string memory m, string memory d, string memory ad, uint mo,string memory e,uint aadhar,string memory pan,string memory ah,string memory ph) 
     public userRestricted{
         address entry = msg.sender;
         require(!users[entry].set);
@@ -85,6 +87,8 @@ contract Userdef{
         users[entry].email = e;
         users[entry].aadhar = aadhar;
         users[entry].pan = pan;
+        users[entry].aadharipfsHash = ah;
+        users[entry].panipfsHash = ph;
         users[entry].set = true;
     }
 
@@ -108,6 +112,11 @@ contract Userdef{
         return (users[rer].aadhar,users[rer].pan);
     }
 
+    function getAadharPanHash(address rer) public view
+    returns(string memory,string memory){
+        require(users[rer].set);
+        return (users[rer].aadharipfsHash,users[rer].panipfsHash);
+    }
 
     function getUserDetails() public view agentRestricted
     returns(string memory, string memory, string memory, string memory, string memory, uint,string memory,uint,string memory){

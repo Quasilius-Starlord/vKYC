@@ -30,6 +30,16 @@ export default function KYCForm(props){
         }
     }
 
+    captureFile(event) {
+        event.preventDefault();
+        const file = event.target.files[0];
+        const reader = new window.FileReader()
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = ()=> {
+            setState(buffer: Buffer(reader.result));
+        }
+    }
+
     //name
     //father name
     //mother name
