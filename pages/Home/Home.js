@@ -6,7 +6,7 @@ import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
 
-const admins=['0x59344a4EDBB68763fbc0f92e2cefB7d41Bd31f8B'];
+const admins=['0x59344a4EDBB68763fbc0f92e2cefB7d41Bd31f8B','0xA6e14e16C49163dC164693d5AaD606DB4a445156'];
 
 function Home(props){
     const [ account, setAccount ] = useState('');

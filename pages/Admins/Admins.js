@@ -20,6 +20,10 @@ export default function Admins(props){
         }else{
             try{
                 let kyc=await factory.methods.getDeployedKycs().call();
+                const contract  = Kyc(kyc[0]);
+                await contract.methods.createRequest("I want it","wfd").send({from: accounts[0]});
+                const userkycdetail=await contract.methods.getparticularUser(acc).call();
+                console.log(userkycdetail);
                 console.log(kyc)
             }catch(err){
                 console.log('no user found')
