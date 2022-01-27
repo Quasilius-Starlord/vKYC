@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {FormLabel, Button, Container, Row } from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import factory from './../../ethereum/factory';
@@ -19,6 +19,8 @@ export default function Confirmation(props){
     const [ DOB, setDOB ] = useState('');
     const [ email, setEmail ] = useState('');
     const [ account, setAccount ] = useState('');
+    const aadharIPFS = useRef('');
+    const PANIPFS = useRef('');
     const [ kycContractAddress, setKycContractAddress ] = useState('');
     const [ displayCardDetails, setDisplayCardDetails ] = useState(false);
 
@@ -64,10 +66,13 @@ export default function Confirmation(props){
         try{
             const contract=Kyc(kycContractAddress);
             const cards=await contract.methods.getAadharPan(account).call();
+            const cardLinks=await contract.methods.getAadharPanHash(account).call();
             setAadharNumber(cards[0]);
             setPANNumber(cards[1]);
+            aadharIPFS.current=cardLinks[0];
+            PANIPFS.current=cardLinks[1];
             setDisplayCardDetails(true)
-            console.log(cards);
+            console.log(cards,cardLinks);
         }catch(e){
             console.log(e);
         }
@@ -86,8 +91,8 @@ export default function Confirmation(props){
                 !displayCardDetails ? (<Button variant='secondary' onClick={e=>displayCards(e)}>View Cards</Button>) : (
                     <Auxil>
                         <Row>Card Details</Row>
-                        <Row>Aadhar Card Number: {aadhaNumber}</Row>
-                        <Row>PAN Card Number: {PANNumber}</Row>
+                        <Row>Aadhar Card Number: {aadhaNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${aadharIPFS.current}`}>View Aadhar Card</a></Row>
+                        <Row>PAN Card Number: {PANNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${PANIPFS.current}`}>View PAN Card</a></Row>
                     </Auxil>
                 )
             }

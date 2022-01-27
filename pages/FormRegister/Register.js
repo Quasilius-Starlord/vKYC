@@ -66,7 +66,15 @@ export default function KYCForm(props){
         //const userkycdetail = await contract.methods.getparticularUser(accounts).call();
         //console.log(userkycdetail)
         // return;
-        console.log(aadharFile, PANFile)
+        if(aadharNumber.length!=12){
+            window.alert('Invalid Aadhar Number');
+            return;
+        }
+        if(PANNumber.length!=10){
+            window.alert('Invalid PAN Number');
+            return;
+        }
+        console.log(aadharFile, PANFile);
         if(PANFile && aadharFile){
             let aadharHash=null;
             let PANHash=null;
