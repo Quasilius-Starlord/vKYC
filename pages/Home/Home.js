@@ -6,24 +6,33 @@ import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
 
+const admins=['0x59344a4EDBB68763fbc0f92e2cefB7d41Bd31f8B'];
+
 function Home(props){
     const [ account, setAccount ] = useState('');
     //const [ kyc, setKyc ] = useState('');
     const router=useRouter();
+    const [ isAdmin, setIsAdmin ] = useState(false);
 
     useEffect(async()=>{
         console.log('props',props)
+        console.log(admins)
         let accounts = await web3.eth.getAccounts();
-        if(accounts===[]){
+        if(accounts.length===0){
             console.log('no account found')
             return;
         }else{
+            let acc=accounts[0];
+            for (let index = 0; index < admins.length; index++) {
+                if(admins[index]===acc){
+                    setIsAdmin(true);
+                    break;
+                }
+            }
             setAccount(accounts[0])
         }
-        
     },[])
     console.log('accounts',account);
-
 
     const createKycSubmit = async(e)=>{
         console.log('creating KYC');
@@ -68,6 +77,9 @@ function Home(props){
             console.log('user not registered for kyc creation');
         }
     };
+    if(isAdmin){
+        router.push('/Admins/Admins');
+    }
 
     return(
     	<div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',justifyContent:'center'}}>
@@ -80,7 +92,7 @@ function Home(props){
                 </Form>
             </div>
         </div>
-    	);
+    );
 }
 
 export async function getServerSideProps(context){
