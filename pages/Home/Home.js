@@ -29,29 +29,41 @@ function Home(props){
         console.log('creating KYC');
         let accounts = account
         try{
-        	let kyc = await factory.methods;
+        	let kyc = await factory.methods.login(accounts).call();
+            const contract = Kyc(kyc);
+            try{
+                const userDetails = await contract.methods.getparticularUser(accounts).call();
+                router.push('Confirmation/Confirmation');
+            }
+            catch (e){
+                console.log("You need to provide details");
+                router.push('/FormRegister/Register');
+            }
         	console.log("You are already registered");
         } catch(e){
         	await factory.methods.createKyc().send({
         		from: accounts
         	});
-        	console.log("kyc created proced with login");
+            router.push('/FormRegister/Register');
         }
         // I need to check here once whether the user has already created kyc or not. for now i am just redirecting
-
-        // let accounts = await web3.eth.getAccounts();
     };
 
     const loginToKyc= async(e) => {
         console.log('applying for kyc');
         let accounts = account;
         try{
-            let loginState=await factory.methods.login(account).call();
-            console.log(loginState)
-            if(loginState!==null){
-                router.push('/FormRegister/Register')
-                return;
+            let kyc = await factory.methods.login(accounts).call();
+            const contract = Kyc(kyc);
+            try{
+                const userDetails = await contract.methods.getparticularUser(accounts).call();
+                router.push('Confirmation/Confirmation');
             }
+            catch (e){
+                console.log("You need to provide details");
+                router.push('/FormRegister/Register');
+            }
+            console.log("You are already registered");
         }catch(e){
             console.log('user not registered for kyc creation');
         }
