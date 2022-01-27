@@ -20,9 +20,17 @@ export default function Admins(props){
         }else{
             try{
                 let kyc=await factory.methods.getDeployedKycs().call();
+                console.log(kyc);
                 const contract  = Kyc(kyc[0]);
-                await contract.methods.createRequest("I want it","wfd").send({from: accounts[0]});
-                const userkycdetail=await contract.methods.getparticularUser(acc).call();
+                try{
+                    const req = await contract.methods.getRequest().call();
+                    console.log(req);
+                } catch(e) {
+                    await contract.methods.createRequest("I want it","wfd").send({from: accounts[0]});
+                    console.log("Req created")
+                }
+                
+                const userkycdetail=await contract.methods.getparticularUser(accounts[0]).call();
                 console.log(userkycdetail);
                 console.log(kyc)
             }catch(err){

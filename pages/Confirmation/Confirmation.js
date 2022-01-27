@@ -41,9 +41,18 @@ export default function Confirmation(props){
         try{
             let kycaddress=await factory.methods.login(acc).call();
             const contract = Kyc(kycaddress);
-            const req = contract.methods.getRequest().call();
-            const app = contract.methods.approveRequest(accounts[0]).call();
-            console.log(req);
+            try{
+                const req = await contract.methods.getRequest().call();
+                //const app = await contract.methods.approveRequest().send({from: accounts[0]});
+                const ass = await contract.methods.assigned().call();
+                console.log('ass',ass);
+                console.log(req);
+            } catch(e) {
+                console.log(e);
+            }
+            
+            //console.log(app);
+            //console.log(req);
             console.log(kycaddress,'kyc address')
             if(kycaddress!==""){
                 setKycContractAddress(kycaddress);
