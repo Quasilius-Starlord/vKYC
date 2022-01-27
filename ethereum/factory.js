@@ -4,7 +4,7 @@ import KycFactory from './build/KycFactory.json';
 
 const instance = new web3.eth.Contract(
 	KycFactory.abi,
-	'0xF76c382C09E87914C2dbDF56ed7e77EE1fD79042'
+	'0x61DEec662E2D3b97A7badeD1c3D1DF3b84F54187'
 	);
 
 export default instance;

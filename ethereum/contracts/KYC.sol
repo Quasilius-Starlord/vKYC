@@ -31,10 +31,12 @@ contract KycFactory{
 
 
     function getRandomUser() public view returns(Userdef) {
-        Userdef[] storage falsedeployed;
+        Userdef[] memory falsedeployed;
+        uint j=0;
         for(uint i=0; i<deployedKycs.length; i++){
             if(!agentdeployedKycs[deployedKycs[i]]){
-                falsedeployed.push(deployedKycs[i]);
+                falsedeployed[j] = deployedKycs[i];
+                j++;
             }
         }
         uint index = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, falsedeployed)))%falsedeployed.length;
@@ -148,6 +150,10 @@ contract Userdef{
             recepient: msg.sender,               // Recepient address will be of agent's i.e., assigned
             complete: false
         });
+    }
+
+    function getRequest() public view returns(Request memory) {
+        return requests;
     }
 
     function approveRequest(address rer) public{
