@@ -19,7 +19,7 @@ export default function Admins(props){
             return;
         }else{
             try{
-                let kyc=await factory.methods.getRandomUser().call();
+                let kyc=await factory.methods.getDeployedKycs().call();
                 console.log(kyc)
             }catch(err){
                 console.log('no user found')

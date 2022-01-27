@@ -47,7 +47,7 @@ export default function Confirmation(props){
                 const userkycdetail=await contract.methods.getparticularUser(acc).call();
                 setName(userkycdetail[0]);
                 setFatherName(userkycdetail[1]);
-                setMotherName(userkycdetail[2]);
+                setMotherName(userkycdetail[2]); 
                 setDOB(userkycdetail[3]);
                 setAddress(userkycdetail[4]);
                 setNumber(userkycdetail[5]);
