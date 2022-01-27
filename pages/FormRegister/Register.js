@@ -6,16 +6,20 @@ import factory from './../../ethereum/factory';
 import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
+import ipfs from '../../ethereum/ipfs';
 
 
 export default function KYCForm(props){
     const [ aadharFile, setAadharFile ] = useState(null);
+    const [ aadharNumber, setAadharNumber ] = useState('');
+    const [ PANNumber, setPANNumber ] = useState('');
     const [ PANFile, setPANFile ] = useState(null);
     const [ name, setName ] = useState('');
     const [ fatherName, setFatherName ] = useState('');
     const [ motherName, setMotherName ] = useState('');
     const [ address, setAddress ] = useState('');
     const [ number, setNumber ] = useState('');
+    const [ email, setEmail ] = useState('');
     const [ DOB, setDOB ] = useState('');
     const [ account, setAccount ] = useState('');
     const [ kycContractAddress, setKycContractAddress ] = useState('');
@@ -44,7 +48,15 @@ export default function KYCForm(props){
             console.log('login not found please login first')
             console.log(e);
         }
-    },[])
+    },[]);
+
+    const setBufferArray = async (file, setter) => {
+        const reader=new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend=()=>{
+            setter(Buffer(reader.result));
+        }
+    }
 
     let submitHandler=async e => {
         e.preventDefault();
@@ -53,11 +65,28 @@ export default function KYCForm(props){
         const contract = Kyc(kyc);
         //const userkycdetail = await contract.methods.getparticularUser(accounts).call();
         //console.log(userkycdetail)
-        // if(aadharFile!==null && PANFile!==null){
-        if(true){
+        // return;
+        console.log(aadharFile, PANFile)
+        if(PANFile && aadharFile){
+            let aadharHash=null;
+            let PANHash=null;
+            let response=null;
             try{
-                console.log(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number')
-                const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number').send({from: accounts});
+                response=await ipfs.files.add(aadharFile);
+                aadharHash=response[0].hash;
+                response=await ipfs.files.add(PANFile);
+                PANHash=response[0].hash;
+            }catch(err){
+                console.log(err);
+                console.log('some error forund while uploading to ipfs');
+                return;
+            }
+            try{
+                if(!aadharHash || !PANHash)
+                    throw 'some error in ipfs hash';
+                console.log(aadharHash,PANHash,'ipfs hash of aadhar and pan');
+                console.log(name,fatherName,motherName,DOB,address,number,email,aadharHash,aadharNumber,PANNumber,PANHash)
+                const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,email,aadharNumber,PANNumber,aadharHash,PANHash).send({from: accounts});
                 console.log('user data has been added',res);
                 router.push('/Confirmation/Confirmation')
             }catch(err){
@@ -78,35 +107,47 @@ export default function KYCForm(props){
             <Form onSubmit={e => submitHandler(e) }>
                 <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control value={name} type='text' onChange={e => {setName(e.target.value); }}/>
+                    <Form.Control required={true} value={name} type='text' onChange={e => {setName(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Fathter Name</Form.Label>
-                    <Form.Control value={fatherName} type='text' onChange={e => {setFatherName(e.target.value); }}/>
+                    <Form.Control required={true} value={fatherName} type='text' onChange={e => {setFatherName(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Mother Name</Form.Label>
-                    <Form.Control value={motherName} type='text' onChange={e => {setMotherName(e.target.value); }}/>
+                    <Form.Control required={true} value={motherName} type='text' onChange={e => {setMotherName(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Address</Form.Label>
-                    <Form.Control value={address} type='text' onChange={e => {setAddress(e.target.value); }}/>
+                    <Form.Control required={true} value={address} type='text' onChange={e => {setAddress(e.target.value); }}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control required={true} value={email} type='email' onChange={e => {setEmail(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Contact Number</Form.Label>
-                    <Form.Control value={number} type='text' onChange={e => {setNumber(e.target.value); }}/>
+                    <Form.Control required={true} value={number} type='text' onChange={e => {setNumber(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Date of Birth</Form.Label>
-                    <Form.Control type='date' value={DOB} onChange={e => {setDOB(e.target.value); }}/>
+                    <Form.Control required={true} type='date' value={DOB} onChange={e => {setDOB(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Aadhar Card</Form.Label>
-                    <Form.Control type='file' accept='.pdf' onChange={e => {setAadharFile(e.target.files[0]); }}/>
+                    <Form.Control required={true} type='file' accept='.pdf' onChange={e => {setBufferArray(e.target.files[0],setAadharFile); }}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Aadhar Card Number</Form.Label>
+                    <Form.Control required={true} type='text' value={aadharNumber} onChange={e => {setAadharNumber(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>PAN</Form.Label>
-                    <Form.Control type='file' accept='.pdf' onChange={e => {setPANFile(e.target.files[0]); }}/>
+                    <Form.Control required={true} type='file' accept='.pdf' onChange={e => {setBufferArray(e.target.files[0],setPANFile); }}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>PAN Card Number</Form.Label>
+                    <Form.Control required={true} type='text' value={PANNumber} onChange={e => {setPANNumber(e.target.value); }}/>
                 </Form.Group>
                 <Form.Group className="text-center">
                     <Button variant="primary" type="submit">Submit</Button>
