@@ -18,7 +18,8 @@ export default function KYCForm(props){
     const [ number, setNumber ] = useState('');
     const [ DOB, setDOB ] = useState('');
     const [ account, setAccount ] = useState('');
-    const [ kycContractAddress, setKycContractAddress ] = useState('')
+    const [ kycContractAddress, setKycContractAddress ] = useState('');
+    const router = useRouter();
     
     useEffect(async()=>{
         console.log('props',props)
@@ -51,16 +52,19 @@ export default function KYCForm(props){
         const contract=Kyc(kycContractAddress);
         const methords=await contract.methods;
         console.log(methords)
-        console.log(DOB,typeof(DOB))
-        // return;
-        if(aadharFile!==null && PANFile!==null){
+        const userkycdetail=await contract.methods.getparticularUser(kycContractAddress).call();
+        console.log(userkycdetail)
+        // if(aadharFile!==null && PANFile!==null){
+        if(true){
             try{
                 console.log(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number')
                 const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,'rathoplexian007@gmail.com',7894561230,'whatever pan number').send({from: accounts});
                 console.log('user data has been added',res);
+                router.push('Confirmation/Confirmation')
             }catch(err){
                 console.log(err);
                 console.log('some error has occored while adding data of user');
+                
             }
         }
     }

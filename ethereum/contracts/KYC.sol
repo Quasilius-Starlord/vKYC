@@ -93,6 +93,7 @@ contract Userdef{
         return usersAddress;
     }
 
+    //use this joy
     function getparticularUser(address rer) public view
     returns(string memory, string memory, string memory, string memory, string memory, uint,string memory){
         require(users[rer].set);
