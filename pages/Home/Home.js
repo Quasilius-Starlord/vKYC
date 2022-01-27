@@ -33,7 +33,7 @@ function Home(props){
             const contract = Kyc(kyc);
             try{
                 const userDetails = await contract.methods.getparticularUser(accounts).call();
-                router.push('Confirmation/Confirmation');
+                router.push('/Confirmation/Confirmation');
             }
             catch (e){
                 console.log("You need to provide details");
@@ -57,7 +57,7 @@ function Home(props){
             const contract = Kyc(kyc);
             try{
                 const userDetails = await contract.methods.getparticularUser(accounts).call();
-                router.push('Confirmation/Confirmation');
+                router.push('/Confirmation/Confirmation');
             }
             catch (e){
                 console.log("You need to provide details");
