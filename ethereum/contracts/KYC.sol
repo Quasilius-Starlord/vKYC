@@ -156,8 +156,8 @@ contract Userdef{
         return requests;
     }
 
-    function approveRequest(address rer) public{
-        require(rer == manager);
+    function approveRequest() public{
+        require(msg.sender == manager);
         require(!requests.complete);
         assigned = requests.recepient;
         requests.complete = true;

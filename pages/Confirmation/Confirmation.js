@@ -23,6 +23,7 @@ export default function Confirmation(props){
     const PANIPFS = useRef('');
     const [ kycContractAddress, setKycContractAddress ] = useState('');
     const [ displayCardDetails, setDisplayCardDetails ] = useState(false);
+    const [ displayRequests, setDisplayRequests ] = useState(false);
 
     const router = useRouter();
     
@@ -41,9 +42,18 @@ export default function Confirmation(props){
         try{
             let kycaddress=await factory.methods.login(acc).call();
             const contract = Kyc(kycaddress);
-            const req = contract.methods.getRequest().call();
-            const app = contract.methods.approveRequest(accounts[0]).call();
-            console.log(req);
+            try{
+                const req = await contract.methods.getRequest().call();
+                //const app = await contract.methods.approveRequest().send({from: accounts[0]});
+                const ass = await contract.methods.assigned().call();
+                console.log('ass',ass);
+                console.log(req);
+            } catch(e) {
+                console.log(e);
+            }
+            
+            //console.log(app);
+            //console.log(req);
             console.log(kycaddress,'kyc address')
             if(kycaddress!==""){
                 setKycContractAddress(kycaddress);
@@ -91,15 +101,28 @@ export default function Confirmation(props){
             <Row>Mobile Number: {number}</Row>
             <Row>Date of Birth: {DOB}</Row>
             <Row>Email address: {email}</Row>
-            {
-                !displayCardDetails ? (<Button variant='secondary' onClick={e=>displayCards(e)}>View Cards</Button>) : (
-                    <Auxil>
-                        <Row>Card Details</Row>
-                        <Row>Aadhar Card Number: {aadhaNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${aadharIPFS.current}`}>View Aadhar Card</a></Row>
-                        <Row>PAN Card Number: {PANNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${PANIPFS.current}`}>View PAN Card</a></Row>
-                    </Auxil>
-                )
-            }
+            <Row className='mb-3'>
+                {
+                    !displayCardDetails ? (<Button variant='secondary' onClick={e=>displayCards(e)}>View Cards</Button>) : (
+                        <Auxil>
+                            <Row>Card Details</Row>
+                            <Row>Aadhar Card Number: {aadhaNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${aadharIPFS.current}`}>View Aadhar Card</a></Row>
+                            <Row>PAN Card Number: {PANNumber} <a target={'_blank'} href={`https://ipfs.io/ipfs/${PANIPFS.current}`}>View PAN Card</a></Row>
+                        </Auxil>
+                    )
+                }
+            </Row>
+            <Row className='mb-3'>
+                {
+                    !displayRequests ? (<Button variant='secondary' onClick={e=>{setDisplayRequests(!displayRequests)}}>View Requests</Button>) : (
+                        <Auxil>
+                            <Row className='mb-3'>Request From</Row>
+                            <Row className='mb-3'><Button onClick={e=>{console.log('request approved')}}>Approve request</Button></Row>
+                            <Row className='mb-3'><Button onClick={e=>{console.log('request declined')}}>Decline request</Button></Row>
+                        </Auxil>
+                    )
+                }
+            </Row>
             <Row>Thank You for Registering with us!</Row>
             <Button variant='info' onClick={e=>{router.push('/Home/Home')}}>Back to Home</Button>
         </Container>
