@@ -95,24 +95,6 @@ function Home(props){
     );
 }
 
-export async function getServerSideProps(context){
-    let accounts = await web3.eth.getAccounts();
-    // console.log(accounts)
-    if(accounts === []){
-        return{
-            props:{
-                accounts:[]
-            }
-        }
-    }else{
-        return{
-            props:{
-                acc:accounts
-            }
-        }
-    }
-}
-
 export default Home;
 
 // /*class KYCIndex extends React.Component {
