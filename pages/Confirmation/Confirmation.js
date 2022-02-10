@@ -7,6 +7,7 @@ import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
 import Auxil from './../Auxilary/Auxil'
+import axios from 'axios';
 
 export default function Confirmation(props){
     const [ aadhaNumber, setAadharNumber ] = useState(null);
@@ -52,13 +53,18 @@ export default function Confirmation(props){
                 console.log(e);
             }
             
-            //console.log(app);
-            //console.log(req);
             console.log(kycaddress,'kyc address')
             if(kycaddress!==""){
                 setKycContractAddress(kycaddress);
                 const contract=Kyc(kycaddress);
                 const userkycdetail=await contract.methods.getparticularUser(acc).call();
+                let data={};
+                data['blockchain_address']=acc;
+                axios.post('http://localhost:8000/uploadDocs/',data).then(e=>{
+                    console.log('data sent',e);
+                }).catch(err=>{
+                    console.log(err)
+                })
                 setName(userkycdetail[0]);
                 setFatherName(userkycdetail[1]);
                 setMotherName(userkycdetail[2]); 

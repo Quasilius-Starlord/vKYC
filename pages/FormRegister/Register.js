@@ -7,7 +7,7 @@ import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
 import ipfs from '../../ethereum/ipfs';
-
+import axios from 'axios';
 
 export default function KYCForm(props){
     const [ aadharFile, setAadharFile ] = useState(null);
@@ -95,6 +95,9 @@ export default function KYCForm(props){
                 console.log(aadharHash,PANHash,'ipfs hash of aadhar and pan');
                 console.log(name,fatherName,motherName,DOB,address,number,email,aadharHash,aadharNumber,PANNumber,PANHash)
                 const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,email,aadharNumber,PANNumber,aadharHash,PANHash).send({from: accounts});
+                let data={};
+                data['address']=address;
+                // axios.post('http://localhost:8000/registerNewUser/',)
                 console.log('user data has been added',res);
                 router.push('/Confirmation/Confirmation')
             }catch(err){

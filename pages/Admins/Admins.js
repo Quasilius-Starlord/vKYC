@@ -5,13 +5,18 @@ import factory from './../../ethereum/factory';
 import Kyc from './../../ethereum/kyc';
 import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
+import Auxil from './../Auxilary/Auxil'
+import axios from "axios";
+
+const admins=['0x59344a4EDBB68763fbc0f92e2cefB7d41Bd31f8B','0xA6e14e16C49163dC164693d5AaD606DB4a445156'];
 
 export default function Admins(props){
     const [ account, setAccount ] = useState('');
     const router=useRouter();
     const [ randomUserKyc, setrandomUserKyc ] = useState(null);
 
-    useEffect(async()=>{
+    // const [ getRandomUs ]
+    useEffect(async ()=>{
         console.log('props',props)
         let accounts = await web3.eth.getAccounts();
         if(accounts.length===0){
@@ -19,20 +24,13 @@ export default function Admins(props){
             return;
         }else{
             try{
-                let kyc=await factory.methods.getDeployedKycs().call();
-                console.log(kyc);
-                const contract  = Kyc(kyc[0]);
-                try{
-                    const req = await contract.methods.getRequest().call();
-                    console.log(req);
-                } catch(e) {
-                    await contract.methods.createRequest("I want it","wfd").send({from: accounts[0]});
-                    console.log("Req created")
+                const found=admins.find(element=>element==accounts[0])
+                console.log(found)
+                if(!found){
+                    router.push('/')
+                    return;
                 }
-                
-                const userkycdetail=await contract.methods.getparticularUser(accounts[0]).call();
-                console.log(userkycdetail);
-                console.log(kyc)
+
             }catch(err){
                 console.log('no user found')
                 console.log(err);
@@ -41,18 +39,36 @@ export default function Admins(props){
         }
     },[]);
 
+    const listPendingRequests = async () => {
+
+    };
+
+    const listAcceptedRequests = async () => {
+
+    };
+
+    const getNewUser = async () => {
+        axios.post('http://localhost:8000/getUnappointed/',{'official':account}).then(res=>JSON.parse(res)).then(res=>{
+            console.log(res);
+        }).catch(err=>console.log(err));
+    }
+
     return (
-        <Container>
-            <Card>
-                <Card.Header as="h5">Featured</Card.Header>
-                <Card.Body>
-                    <Card.Title>Name of user</Card.Title>
-                    <Card.Text>
-                        details of user
-                    </Card.Text>
-                    <Button onClick={e=>{console.log('send request')}} variant="info">Send Request</Button>
-                </Card.Body>
-            </Card>
-        </Container>
+        // <Auxil>
+            <Container>
+                <Card>
+                    <Card.Header as="h5">Featured</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Name of user</Card.Title>
+                        <Card.Text>
+                            details of user
+                        </Card.Text>
+                        <Button onClick={e=>{console.log('send request')}} variant="info">Send Request</Button>
+                    </Card.Body>
+                </Card>
+                {}
+                <Button onClick={e=>getNewUser()}>Get New User</Button>
+            </Container>
+        // {/* </Auxil> */}
     );
 }
