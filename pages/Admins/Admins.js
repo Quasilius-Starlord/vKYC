@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 export default function Admins(props){
     const [ account, setAccount ] = useState('');
     const router=useRouter();
-    const [ randomUserKyc, setrandomUserKyc ] = useState(null);
 
     useEffect(async()=>{
         console.log('props',props)
@@ -18,28 +17,44 @@ export default function Admins(props){
             console.log('no account found')
             return;
         }else{
-            try{
-                let kyc=await factory.methods.getDeployedKycs().call();
-                console.log(kyc);
-                const contract  = Kyc(kyc[0]);
-                try{
-                    const req = await contract.methods.getRequest().call();
-                    console.log(req);
-                } catch(e) {
-                    await contract.methods.createRequest("I want it","wfd").send({from: accounts[0]});
-                    console.log("Req created")
-                }
-                
-                const userkycdetail=await contract.methods.getparticularUser(accounts[0]).call();
-                console.log(userkycdetail);
-                console.log(kyc)
-            }catch(err){
-                console.log('no user found')
-                console.log(err);
-            }
+            console.log(accounts[0]);
             setAccount(accounts[0]);
         }
     },[]);
+
+    const createRequest = async(e)=> {
+        try {
+            let kyc=await factory.methods.getDeployedKycs().call();
+            console.log(kyc);
+            const contract  = Kyc(kyc[0]);
+            // Remeber to make a boolean here for registering that is present in django(i.e., pending)
+            await contract.methods.createRequest("I want it","wfd").send({from: account});
+            console.log("Req created")
+            
+            
+            //const userkycdetail=await contract.methods.getparticularUser(accounts[0]).call();
+            //console.log(userkycdetail);
+            //console.log(kyc)
+        }catch(err){
+            console.log('no user found')
+            console.log(err);
+        }
+    };
+
+    const userDetails = async(e)=> {
+        try{
+            let kyc=await factory.methods.getDeployedKycs().call();
+            const contract = Kyc(kyc[0]);
+            const assigned = await contract.methods.assigned().call();
+            console.log(assigned);
+            const details = await contract.methods.getUserDetails(account).call();
+            console.log(details);
+        } catch(err){
+            console.log("Permission denied");
+            console.log(err);
+        }
+
+    }
 
     return (
         <Container>
@@ -50,7 +65,8 @@ export default function Admins(props){
                     <Card.Text>
                         details of user
                     </Card.Text>
-                    <Button onClick={e=>{console.log('send request')}} variant="info">Send Request</Button>
+                    <Button onClick={e=>{createRequest(e)}} variant="info">Send Request</Button>
+                    <Button onClick={e=>{userDetails(e)}} variant="info">Get User Details</Button>
                 </Card.Body>
             </Card>
         </Container>

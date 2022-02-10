@@ -91,6 +91,29 @@ export default function Confirmation(props){
             console.log(e);
         }
     }
+
+    const viewRequests=async(e) => {
+        try{
+            const contract = Kyc(kycContractAddress);
+            const reqs = await contract.methods.getRequest().call();
+            setDisplayRequests(!displayRequests);
+            console.log(reqs);
+        } catch(e) {
+            console.log('No requests');
+        }
+    }
+
+    const approveRequest=async(e) => {
+        try{
+            const contract = Kyc(kycContractAddress);
+            await contract.methods.approveRequest().send({from: account});
+            console.log('approved');
+        } catch(e) {
+            console.log("Problem");
+            console.log(e);
+        }
+    }
+
     return(
         <Container style={{width:'50%', margin:'auto',fontSize:'1.2em'}}>
             <h3>You've registered with following Details</h3>
@@ -114,10 +137,10 @@ export default function Confirmation(props){
             </Row>
             <Row className='mb-3'>
                 {
-                    !displayRequests ? (<Button variant='secondary' onClick={e=>{setDisplayRequests(!displayRequests)}}>View Requests</Button>) : (
+                    !displayRequests ? (<Button variant='secondary' onClick={e=>{viewRequests(e)}}>View Requests</Button>) : (
                         <Auxil>
                             <Row className='mb-3'>Request From</Row>
-                            <Row className='mb-3'><Button onClick={e=>{console.log('request approved')}}>Approve request</Button></Row>
+                            <Row className='mb-3'><Button onClick={e=>{approveRequest(e)}}>Approve request</Button></Row>
                             <Row className='mb-3'><Button onClick={e=>{console.log('request declined')}}>Decline request</Button></Row>
                         </Auxil>
                     )
