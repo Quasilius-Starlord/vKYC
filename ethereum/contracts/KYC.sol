@@ -2,13 +2,14 @@
 pragma solidity >=0.4.0 <0.9.0;
 
 contract KycFactory{
+
     struct Register{
         Userdef kycContract;
         bool isRegistered;
         bool kycdone;
     }
     Userdef[] public deployedKycs;
-    mapping(Userdef => bool) agentdeployedKycs;
+    address[] public usersAddresses;
     mapping(address => Register) particularUserKyc;
 
     function createKyc() public{
@@ -16,7 +17,7 @@ contract KycFactory{
         particularUserKyc[msg.sender].kycContract = newKyc;
         particularUserKyc[msg.sender].isRegistered = true;
         particularUserKyc[msg.sender].kycdone = false;
-        agentdeployedKycs[newKyc] = false;
+        usersAddresses.push(msg.sender);
         deployedKycs.push(newKyc);
     }
 
@@ -29,23 +30,10 @@ contract KycFactory{
         return deployedKycs;
     }
 
-
-    function getRandomUser() public view returns(Userdef) {
-        Userdef[] memory falsedeployed;
-        uint j=0;
-        for(uint i=0; i<deployedKycs.length; i++){
-            if(!agentdeployedKycs[deployedKycs[i]]){
-                falsedeployed[j] = deployedKycs[i];
-                j++;
-            }
-        }
-        uint index = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, falsedeployed)))%falsedeployed.length;
-        return falsedeployed[index];
+    function kycdone(address ooh) public {
+        particularUserKyc[ooh].kycdone = true;
     }
 
-    function getparticularUser() public view returns(Userdef){
-        return particularUserKyc[msg.sender].kycContract;
-    }
 
 }
 
@@ -76,10 +64,7 @@ contract Userdef{
         _;
     }
 
-    modifier agentRestricted(){
-        require(msg.sender == assigned);
-        _;
-    }
+
 
     constructor(address creator){
         manager = creator;           // User will be owner as it is his/her contract.
@@ -129,7 +114,7 @@ contract Userdef{
         return (users[rer].aadharipfsHash,users[rer].panipfsHash);
     }
 
-    function getUserDetails(address ass) public view agentRestricted
+    function getUserDetails(address ass) public view
     returns(string memory, string memory, string memory, string memory, string memory, string memory,string memory,string memory,string memory){
         require(assigned == ass);
         return (users[manager].name,users[manager].father,users[manager].mother,users[manager].birthdate,users[manager].add,users[manager].mob,users[manager].email,users[manager].aadhar,users[manager].pan);

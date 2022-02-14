@@ -63,9 +63,6 @@ export default function KYCForm(props){
         let accounts = account;
         const kyc = kycContractAddress;
         const contract = Kyc(kyc);
-        //const userkycdetail = await contract.methods.getparticularUser(accounts).call();
-        //console.log(userkycdetail)
-        // return;
         if(aadharNumber.length!=12){
             window.alert('Invalid Aadhar Number');
             return;
@@ -96,8 +93,12 @@ export default function KYCForm(props){
                 console.log(name,fatherName,motherName,DOB,address,number,email,aadharHash,aadharNumber,PANNumber,PANHash)
                 const res=await contract.methods.addUser(name,fatherName,motherName,DOB,address,number,email,aadharNumber,PANNumber,aadharHash,PANHash).send({from: accounts});
                 let data={};
-                data['address']=address;
-                // axios.post('http://localhost:8000/registerNewUser/',)
+                data['blockchain_address']=account;
+                axios.post('http://localhost:8000/uploadDocs/',data).then(e=>{
+                    console.log('data sent',e);
+                }).catch(err=>{
+                    console.log(err)
+                })
                 console.log('user data has been added',res);
                 router.push('/Confirmation/Confirmation')
             }catch(err){

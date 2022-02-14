@@ -8,6 +8,7 @@ import web3 from './../../ethereum/web3';
 import { useRouter } from "next/router";
 import Auxil from './../Auxilary/Auxil'
 import axios from 'axios';
+import Meeting from './Meeting';
 
 export default function Confirmation(props){
     const [ aadhaNumber, setAadharNumber ] = useState(null);
@@ -25,6 +26,10 @@ export default function Confirmation(props){
     const [ kycContractAddress, setKycContractAddress ] = useState('');
     const [ displayCardDetails, setDisplayCardDetails ] = useState(false);
     const [ displayRequests, setDisplayRequests ] = useState(false);
+    const [ meet, setMeet ] = useState(false)
+    const [ meetlink, setMeetlink ] = useState('No Meet Link');
+    const [ meetTime, setMeetTime ] = useState('');
+    const [ meetPending, setMeetPending ] = useState(null);
 
     const router = useRouter();
     
@@ -58,13 +63,6 @@ export default function Confirmation(props){
                 setKycContractAddress(kycaddress);
                 const contract=Kyc(kycaddress);
                 const userkycdetail=await contract.methods.getparticularUser(acc).call();
-                let data={};
-                data['blockchain_address']=acc;
-                axios.post('http://localhost:8000/uploadDocs/',data).then(e=>{
-                    console.log('data sent',e);
-                }).catch(err=>{
-                    console.log(err)
-                })
                 setName(userkycdetail[0]);
                 setFatherName(userkycdetail[1]);
                 setMotherName(userkycdetail[2]); 
@@ -97,6 +95,27 @@ export default function Confirmation(props){
             console.log(e);
         }
     }
+
+    const viewRequests=async(e) => {
+        try{
+            // const contract = Kyc(kycContractAddress);
+            // const reqs = await contract.methods.getRequest().call();
+            axios.post('http://localhost:8000/getmeetings/',{'user':account,'email':email}).then(res=>res.data).then(res=>{
+                // console.log(res.meet,res.meet.meetlink, res.meet.meetingTime, res.meet.pending);
+                setMeetlink(res.meet.meetlink)
+                setMeetTime(new Date(Date.parse(res.meet.meetingTime)))
+                setMeetPending(res.meet.pending)
+                setMeet(res.response);
+            }).catch(err=>{
+                console.log(err)
+            })
+            setDisplayRequests(!displayRequests);
+            console.log(reqs);
+        } catch(e) {
+            console.log('No requests');
+        }
+    }
+
     return(
         <Container style={{width:'50%', margin:'auto',fontSize:'1.2em'}}>
             <h3>You've registered with following Details</h3>
@@ -120,13 +139,8 @@ export default function Confirmation(props){
             </Row>
             <Row className='mb-3'>
                 {
-                    !displayRequests ? (<Button variant='secondary' onClick={e=>{setDisplayRequests(!displayRequests)}}>View Requests</Button>) : (
-                        <Auxil>
-                            <Row className='mb-3'>Request From</Row>
-                            <Row className='mb-3'><Button onClick={e=>{console.log('request approved')}}>Approve request</Button></Row>
-                            <Row className='mb-3'><Button onClick={e=>{console.log('request declined')}}>Decline request</Button></Row>
-                        </Auxil>
-                    )
+                    !displayRequests ? (<Button variant='secondary' onClick={e=>{viewRequests(e)}}>View Requests</Button>) : 
+                    <Meeting setMeeting={setMeet} meeting={meet} meetlink={meetlink} meetTime={meetTime} pending={meetPending} account={account} setMeetPending={setMeetPending} />
                 }
             </Row>
             <Row>Thank You for Registering with us!</Row>
