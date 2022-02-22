@@ -43,14 +43,8 @@ export default function Admins(props){
         }
     },[]);
 
-    const createRequest = (e)=> {
+    const createRequest = async (e)=> {
         try {
-            // let kyc=await factory.methods.getDeployedKycs().call();
-            // console.log(kyc);
-            // const contract  = Kyc(kyc[0]);
-            // Remeber to make a boolean here for registering that is present in django(i.e., pending)
-            // await contract.methods.createRequest("I want it","wfd").send({from: account});
-            // console.log("Req created")
             if(!meetLink.current)
                 return;
             console.log('selected',e,'meet linjk',meetLink.current);
@@ -67,20 +61,7 @@ export default function Admins(props){
         }
     };
 
-    const userDetails = async(e)=> {
-        try{
-            let kyc=await factory.methods.getDeployedKycs().call();
-            const contract = Kyc(kyc[0]);
-            const assigned = await contract.methods.assigned().call();
-            console.log(assigned);
-            const details = await contract.methods.getUserDetails(account).call();
-            console.log(details);
-        } catch(err){
-            console.log("Permission denied");
-            console.log(err);
-        }
-
-    }
+    
 
     const getallmeetings = async e => {
         if(allMeetings.current.length>0)
@@ -102,6 +83,7 @@ export default function Admins(props){
                             <Card.Text>
                                 Meeting link: {element['meetlink']}
                             </Card.Text>
+                            <Button onClick={e=>{userDetails(element['user_blockchain_address'])}} variant="info">Get User Details</Button>
                         </Card.Body>
                     </Card>)
                 });
@@ -112,6 +94,23 @@ export default function Admins(props){
         }catch(err){
             console.log(err)
         }
+    }
+
+    const userDetails = async(e)=> {
+        console.log(e)
+        try{
+            let kyc=await factory.methods.login(e).call();
+            console.log(kyc);
+            const contract = Kyc(kyc);
+            const assigned = await contract.methods.assigned().call();
+            console.log(assigned);
+            const details = await contract.methods.getUserDetails(account).call();
+            console.log(details);
+        } catch(err){
+            console.log("Permission denied");
+            console.log(err);
+        }
+
     }
 
     const getNewUser = async () => {
@@ -136,7 +135,7 @@ export default function Admins(props){
                             </Form.Group>
                         </Form>
                         <Button onClick={e=>{createRequest(res['blockchain_address'])}} variant="info">Send Request</Button>
-                        {/* <Button onClick={e=>{userDetails(e)}} variant="info">Get User Details</Button> */}
+                         
                     </Card.Body>
                 </Card>)
             console.log(res['blockchain_address']);
@@ -150,6 +149,7 @@ export default function Admins(props){
             {allMeetings.current.map(e=>e)}
             {randomUser.current}
             <Button onClick={e=>getNewUser()}>Get New User</Button>
+            <Button onClick={e=>userDetails()}>Get User Details</Button>
         </Container>
     );
 }

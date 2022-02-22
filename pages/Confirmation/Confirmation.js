@@ -98,8 +98,6 @@ export default function Confirmation(props){
 
     const viewRequests=async(e) => {
         try{
-            // const contract = Kyc(kycContractAddress);
-            // const reqs = await contract.methods.getRequest().call();
             axios.post('http://localhost:8000/getmeetings/',{'user':account,'email':email}).then(res=>res.data).then(res=>{
                 // console.log(res.meet,res.meet.meetlink, res.meet.meetingTime, res.meet.pending);
                 setMeetlink(res.meet.meetlink)

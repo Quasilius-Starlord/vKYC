@@ -93,7 +93,7 @@ contract Userdef{
         return usersAddress;
     }
 
-    //use this joy
+    // Called by user
     function getparticularUser(address rer) public view
     returns(string memory, string memory, string memory, string memory, string memory, string memory,string memory){
         require(users[rer].set);
@@ -101,6 +101,7 @@ contract Userdef{
         return (users[rer].name,users[rer].father,users[rer].mother,users[rer].birthdate,users[rer].add,users[rer].mob,users[rer].email);
     }
 
+    // Called by user
     function getAadharPan(address rer) public view
     returns(string memory,string memory){
         require(users[rer].set);
@@ -108,44 +109,31 @@ contract Userdef{
         return (users[rer].aadhar,users[rer].pan);
     }
 
+    // Called by user
     function getAadharPanHash(address rer) public view
     returns(string memory,string memory){
         require(users[rer].set);
+        require(rer == manager);
         return (users[rer].aadharipfsHash,users[rer].panipfsHash);
     }
 
+
+    // Called by admins
     function getUserDetails(address ass) public view
     returns(string memory, string memory, string memory, string memory, string memory, string memory,string memory,string memory,string memory){
         require(assigned == ass);
         return (users[manager].name,users[manager].father,users[manager].mother,users[manager].birthdate,users[manager].add,users[manager].mob,users[manager].email,users[manager].aadhar,users[manager].pan);
     }
 
-    struct Request{
-        string description;
-        string link;
-        address recepient;
-        bool complete;
-    }
-    Request requests;
-
-    function createRequest(string memory describe,string memory link) public{
-        requests = Request({                    // Agent will create a request for accessing documents of user/manager.
-            description: describe,
-            link: link,
-            recepient: msg.sender,               // Recepient address will be of agent's i.e., assigned
-            complete: false
-        });
+    function getUserAadharPanHash(address rer) public view
+    returns(string memory,string memory){
+        require(assigned == rer);
+        return (users[rer].aadharipfsHash,users[rer].panipfsHash);
     }
 
-    function getRequest() public view returns(Request memory) {
-        return requests;
-    }
-
-    function approveRequest() public{
+    function approveRequest(address recepient) public{
         require(msg.sender == manager);
-        require(!requests.complete);
-        assigned = requests.recepient;
-        requests.complete = true;
+        assigned = recepient;
     }
 
 } 
