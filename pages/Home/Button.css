@@ -1,0 +1,11 @@
+Button{
+    background-color:'#0fcead';
+    border:'none';
+}
+
+Red {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(50%,50%);
+}
