@@ -102,6 +102,7 @@ export default function Admins(props){
                             <Card.Text>
                                 Meeting link: {element['meetlink']}
                             </Card.Text>
+                            <Button onClick={e=>{console.log(element['user_blockchain_address'])}} variant="info">Get User Details</Button>
                         </Card.Body>
                     </Card>)
                 });
@@ -136,7 +137,7 @@ export default function Admins(props){
                             </Form.Group>
                         </Form>
                         <Button onClick={e=>{createRequest(res['blockchain_address'])}} variant="info">Send Request</Button>
-                        {/* <Button onClick={e=>{userDetails(e)}} variant="info">Get User Details</Button> */}
+                        <Button onClick={e=>{userDetails(e)}} variant="info">Get User Details</Button>
                     </Card.Body>
                 </Card>)
             console.log(res['blockchain_address']);
