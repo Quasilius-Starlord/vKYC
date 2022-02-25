@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {FormLabel, Button, Form } from 'react-bootstrap';
+import {FormLabel, Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import factory from './../../ethereum/factory';
 import Kyc from './../../ethereum/kyc';
@@ -60,7 +60,7 @@ function Home(props){
                 router.push('/FormRegister/Register');
             }catch(e){
                 console.log('rejected payment');
-                setWaiting(false);
+                setWaiting(false);e
             }
         }
         // I need to check here once whether the user has already created kyc or not. for now i am just redirecting
@@ -92,12 +92,12 @@ function Home(props){
     }
 
     return(
-    	<div style={{width:'100%',height:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-evenly'}}>
-            <div style={{width:'65%'}}>Lorem Ipsum is simply dummy text of the printing and typ
+    	<div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column',alignItems:'center',position:'relative',minHeight:'100vh'}}>
+            <div style={{width:'70%'}}>Lorem Ipsum is simply dummy text of the printing and typ
             esetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
             , when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap i
             nto electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset</div>
-            <div style={{width:'65%'}}>
+            <div style={{width:'50%'}}>
                 <Form onSubmit={e=>e.preventDefault()}>
                     <Form.Group style={{display:'flex', justifyContent:'space-between'}}>
                         <Button style={{backgroundColor:'#0fcead',border:'none'}} onClick={e=>{createKycSubmit(e)}} size="lg">Create KYC</Button>
@@ -105,6 +105,8 @@ function Home(props){
                     </Form.Group>
                 </Form>
             </div>
+            {/* <Container style={{width:'65%',alignSelf:'center', height:'100%',flexDirection:'column', justifyContent:'space-around'}}>
+            </Container> */}
             {
                 waiting ? (
                     <div style={{position:'absolute',width:'100%',display:'flex',justifyContent:'center',alignItems:'center',height:'100%',backgroundColor:'rgb(157, 224, 224,0.8)'}}>
