@@ -14,6 +14,7 @@ export default function KYCForm(props){
     const [ address, setAddress ] = useState('');
     const [ number, setNumber ] = useState('');
     const [ DOB, setDOB ] = useState('');
+    const [ buffer, setBuffer ] = useState(null);
     let submitHandler=async e => {
         e.preventDefault();
         if(aadharFile!==null && PANFile!==null){
@@ -30,13 +31,13 @@ export default function KYCForm(props){
         }
     }
 
-    captureFile(event) {
+    const captureFile=(event) => {
         event.preventDefault();
         const file = event.target.files[0];
-        const reader = new window.FileReader()
+        const reader = new window.FileReader();
         reader.readAsArrayBuffer(file);
         reader.onloadend = ()=> {
-            setState(buffer: Buffer(reader.result));
+            setBuffer(Buffer(reader.result));
         }
     }
 
