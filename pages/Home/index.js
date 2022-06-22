@@ -93,9 +93,9 @@ function Home(props){
 
     return(
     	<div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column',alignItems:'center',position:'relative',minHeight:'100vh'}}>
-            <div style={{width:'70%'}}>
+            <div style={{width:'70%', textAlign:'center'}}>
                 <h1>Etherem Virtual KYC</h1>
-                <h5>Install <a href="https://metamask.io/download/" target={'_blank'}></a>Meta Mask wallet extention to use our services.</h5>
+                <h5>Install <a href="https://metamask.io/download/" target={'_blank'}>Meta Mask wallet</a> extention to use our services.</h5>
             </div>
             <div style={{width:'50%'}}>
                 <Form onSubmit={e=>e.preventDefault()}>
