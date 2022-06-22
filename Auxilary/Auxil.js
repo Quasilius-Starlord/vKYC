@@ -1,3 +1,3 @@
-export default function Auxil(props){
+export function Auxil(props){
     return (props.children);
 }
