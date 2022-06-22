@@ -1,3 +1,3 @@
-export function Auxil(props){
+export const Auxil=(props)=>{
     return (props.children);
 }
