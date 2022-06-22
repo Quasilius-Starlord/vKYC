@@ -5,9 +5,9 @@ import Router,{ useRouter } from "next/router";
 import factory from '../ethereum/factory';
 import Kyc from '../ethereum/kyc';
 import web3 from '../ethereum/web3';
-import Home from "./Home/Home";
-import KYCForm from "./FormRegister/Register";
-import ipfs from '../ethereum/ipfs';
+// import Home from "./Home/Home";
+// import KYCForm from "./FormRegister/Register";
+// import ipfs from '../ethereum/ipfs';
 
 function KYCIndex(props){
     const [ account, setAccount ] = useState('');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Auxil from './../Auxilary/Auxil'
+// import Auxil from './../Auxilary/Auxil'
 import axios from 'axios';
 import { Button, Container, Row } from 'react-bootstrap';
 import factory from './../../ethereum/factory';
