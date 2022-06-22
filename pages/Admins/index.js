@@ -5,7 +5,7 @@ import factory from '../../ethereum/factory';
 import Kyc from '../../ethereum/kyc';
 import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
-import Auxil from './../Auxilary/Auxil'
+// import Auxil from './../Auxilary/Auxil'
 import axios from "axios";
 import {PuffLoader, PulseLoader} from 'react-spinners';
 
