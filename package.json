@@ -24,6 +24,7 @@
     "react-spinners": "^0.11.0",
     "solc": "^0.8.11",
     "truffle-hdwallet-provider": "^1.0.17",
+    "vercel": "^25.1.0",
     "web3": "^1.7.0"
   }
 }

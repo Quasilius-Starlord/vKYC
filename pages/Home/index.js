@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {FormLabel, Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import factory from './../../ethereum/factory';
-import Kyc from './../../ethereum/kyc';
-import web3 from './../../ethereum/web3';
+import factory from '../../ethereum/factory';
+import Kyc from '../../ethereum/kyc';
+import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
 import PuffLoader from 'react-spinners/PuffLoader';
 
@@ -46,18 +46,18 @@ function Home(props){
             try{
                 const userDetails = await contract.methods.getparticularUser(accounts).call();
                 console.log("You are already registered");
-                router.push('/Confirmation/Confirmation');
+                router.push('/Confirmation/');
             }
             catch (e){
                 console.log("You need to provide details");
-                router.push('/FormRegister/Register');
+                router.push('/FormRegister/');
             }
         }catch(e){
             try{
                 await factory.methods.createKyc().send({
                     from: accounts
                 });
-                router.push('/FormRegister/Register');
+                router.push('/FormRegister/');
             }catch(e){
                 console.log('rejected payment');
                 setWaiting(false);e
@@ -75,11 +75,11 @@ function Home(props){
             const contract = Kyc(kyc);
             try{
                 const userDetails = await contract.methods.getparticularUser(accounts).call();
-                router.push('/Confirmation/Confirmation');
+                router.push('/Confirmation/');
             }
             catch (e){
                 console.log("You need to provide details");
-                router.push('/FormRegister/Register');
+                router.push('/FormRegister/');
             }
             console.log("You are already registered");
         }catch(e){
@@ -88,7 +88,7 @@ function Home(props){
         }
     };
     if(isAdmin){
-        router.push('/Admins/Admins');
+        router.push('/Admins/');
     }
 
     return(

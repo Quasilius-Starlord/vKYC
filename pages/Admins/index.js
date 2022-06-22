@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import {FormLabel, Button, Form, Card, Container, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import factory from './../../ethereum/factory';
-import Kyc from './../../ethereum/kyc';
-import web3 from './../../ethereum/web3';
+import factory from '../../ethereum/factory';
+import Kyc from '../../ethereum/kyc';
+import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
 import Auxil from './../Auxilary/Auxil'
 import axios from "axios";

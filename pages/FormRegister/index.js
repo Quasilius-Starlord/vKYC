@@ -2,9 +2,9 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import {FormLabel, Button, Form, Alert } from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import factory from './../../ethereum/factory';
-import Kyc from './../../ethereum/kyc';
-import web3 from './../../ethereum/web3';
+import factory from '../../ethereum/factory';
+import Kyc from '../../ethereum/kyc';
+import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
 import ipfs from '../../ethereum/ipfs';
 import axios from 'axios';
@@ -126,7 +126,7 @@ export default function KYCForm(props){
                     console.log(err)
                 })
                 console.log('user data has been added',res);
-                router.push('/Confirmation/Confirmation')
+                router.push('/Confirmation/')
             }catch(err){
                 console.log(err);
                 console.log('some error has occored while adding data of user');

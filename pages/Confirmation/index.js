@@ -2,9 +2,9 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import {FormLabel, Button, Container, Row } from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import factory from './../../ethereum/factory';
-import Kyc from './../../ethereum/kyc';
-import web3 from './../../ethereum/web3';
+import factory from '../../ethereum/factory';
+import Kyc from '../../ethereum/kyc';
+import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
 import Auxil from './../Auxilary/Auxil'
 import axios from 'axios';
@@ -159,7 +159,7 @@ export default function Confirmation(props){
                     }
                 </Row>
                 <Row className='mb-3' style={{fontFamily:['Redressed'],fontSize:'2.5rem',textTransform:'capitalize',justifyContent:'center',textAlign:'center',letterSpacing:'4px'}}>Thank You for Registering with us!</Row>
-                <Row><div style={{textAlign:'center',fontFamily:['Cinzel']}}><Button style={{fontSize:'1.4rem'}} variant='info' onClick={e=>{router.push('/Home/Home')}}>Back to Home</Button></div></Row>
+                <Row><div style={{textAlign:'center',fontFamily:['Cinzel']}}><Button style={{fontSize:'1.4rem'}} variant='info' onClick={e=>{router.push('/Home/')}}>Back to Home</Button></div></Row>
             </Container>
             {
                 waiting ? (

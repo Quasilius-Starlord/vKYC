@@ -27,7 +27,7 @@ function KYCIndex(props){
         }
         console.log(accounts)
         setAccount(accounts);
-        router.push('/Home/Home')
+        router.push('/Home')
     },[])
 
 
