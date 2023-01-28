@@ -98,6 +98,7 @@ export default function KYCForm(props){
             setWaiting(true);
             try{
                 response=await ipfs.files.add(aadharFile);
+                console.log(response)
                 aadharHash=response[0].hash;
                 response=await ipfs.files.add(PANFile);
                 PANHash=response[0].hash;

@@ -24,6 +24,7 @@ export default function Confirmation(props){
     const [ DOB, setDOB ] = useState('');
     const [ email, setEmail ] = useState('');
     const [ account, setAccount ] = useState('');
+    const [ KYCStatus, setKYCStatus ] = useState(null);
     const aadharIPFS = useRef('');
     const PANIPFS = useRef('');
     const [ kycContractAddress, setKycContractAddress ] = useState('');
@@ -69,12 +70,20 @@ export default function Confirmation(props){
                 const userkycdetail=await contract.methods.getparticularUser(acc).call();
                 setName(userkycdetail[0]);
                 setFatherName(userkycdetail[1]);
-                setMotherName(userkycdetail[2]); 
+                setMotherName(userkycdetail[2]);
                 setDOB(userkycdetail[3]);
                 setAddress(userkycdetail[4]);
                 setNumber(userkycdetail[5]);
                 setEmail(userkycdetail[6]);
-                console.log(userkycdetail)
+                console.log(userkycdetail);
+
+                axios.post('http://localhost:8000/status/',{'blockchain_address':acc}).then(response=>{
+                    console.log(response.data);
+                    setKYCStatus(response.data.kyc_done ? 'Approved' : 'Pending')
+                    
+                }).catch(error=>{
+                    console.log(error);
+                })
             }else{
                 return;
             }
@@ -142,6 +151,7 @@ export default function Confirmation(props){
                 <Row className='mb-3'>Mobile Number: {number ? number : (<PulseLoader css={`width: fit-content;`} size={'10px'} margin={'10px'} />)}</Row>
                 <Row className='mb-3'>Date of Birth: {DOB ? DOB : (<PulseLoader css={`width: fit-content;`} size={'10px'} margin={'10px'} />)}</Row>
                 <Row className='mb-3'>Email address: {email ? email : (<PulseLoader css={`width: fit-content;`} size={'10px'} margin={'10px'} />)}</Row>
+                <Row className='mb-3' style={{fontWeight:'bold'}}>KYC Status: {KYCStatus ? KYCStatus : (<PulseLoader css={`width: fit-content;`} size={'10px'} margin={'10px'} />)}</Row>
                 <Row className='mb-3' style={{fontFamily:['Cinzel']}}>
                     {
                         !displayCardDetails ? (<div style={{textAlign:'center'}}><Button style={{width:'28%',fontSize:'1.4rem'}} variant='secondary' onClick={e=>displayCards(e)}>View Cards</Button></div>) : (

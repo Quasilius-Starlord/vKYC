@@ -7,7 +7,7 @@ import web3 from '../../ethereum/web3';
 import { useRouter } from "next/router";
 import PuffLoader from 'react-spinners/PuffLoader';
 
-const admins=['0x59344a4EDBB68763fbc0f92e2cefB7d41Bd31f8B','0xA6e14e16C49163dC164693d5AaD606DB4a445156'];
+const admins=['0x0E34E2d3687d4411a472783C8FF7108357648b65','0xA6e14e16C49163dC164693d5AaD606DB4a445156','0xad9B2bbB0bc524F903cBd64c38d16F3BC76FF97e'];
 
 function Home(props){
     const [ account, setAccount ] = useState('');

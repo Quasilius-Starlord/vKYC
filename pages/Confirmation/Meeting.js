@@ -19,7 +19,7 @@ export default function Meeting(props){
         try{
             console.log(props.setWaiting)
             props.setWaiting(true);
-            axios.post('http://localhost:8000/approverequest/',{'user':props.account}).then(res=>res.data).then(async (res) =>{
+            axios.post('http://localhost:8000/approvemeeting/',{'user':props.account}).then(res=>res.data).then(async (res) =>{
                 console.log(res['official_address'])
 
                 if(res.response){
@@ -48,7 +48,7 @@ export default function Meeting(props){
             // const contract = Kyc(kycContractAddress);
             // await contract.methods.approveRequest().send({from: account});
             props.setWaiting(true);
-            axios.post('http://localhost:8000/deleterequest/',{'user':props.account}).then(res=>res.data).then(res=>{
+            axios.post('http://localhost:8000/deletemeeting/',{'user':props.account}).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.response){
                     props.setMeeting(false)

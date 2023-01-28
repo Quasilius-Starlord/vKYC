@@ -31,9 +31,14 @@ contract KycFactory{
     }
 
     function kycdone(address ooh) public {
+        require(particularUserKyc[ooh].isRegistered);
         particularUserKyc[ooh].kycdone = true;
     }
 
+    function viewKYCstatus(address ooh) public view returns(Userdef, bool, bool) {
+        require(particularUserKyc[ooh].isRegistered);
+        return (particularUserKyc[ooh].kycContract, particularUserKyc[ooh].isRegistered, particularUserKyc[ooh].kycdone);
+    }
 
 }
 
